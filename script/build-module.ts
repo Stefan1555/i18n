@@ -17,8 +17,8 @@ const getIds = require('get-crowdin-file-ids')
 const remark = require('remark')
 const links = require('remark-inline-links')
 import { parseElectronGlossary, IParseElectronGlossaryReturn } from '../lib/parse-electron-glossary'
-const plaintextFix = require('../lib/remark-plaintext-fix')
 const fiddleUrls = require('../lib/remark-fiddle-urls')
+import { plaintextFix } from '../lib/remark-plaintext-fix'
 
 const contentDir = path.join(__dirname, '../content')
 import * as cheerio from 'cheerio'
