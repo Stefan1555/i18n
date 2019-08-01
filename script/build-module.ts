@@ -17,7 +17,7 @@ const getIds = require('get-crowdin-file-ids')
 const remark = require('remark')
 const links = require('remark-inline-links')
 import { parseElectronGlossary, IParseElectronGlossaryReturn } from '../lib/parse-electron-glossary'
-const fiddleUrls = require('../lib/remark-fiddle-urls')
+import { fiddleUrls } from '../lib/remark-fiddle-urls'
 import { plaintextFix } from '../lib/remark-plaintext-fix'
 
 const contentDir = path.join(__dirname, '../content')
@@ -99,7 +99,7 @@ async function parseFile(file: $TSFixMe) {
 
   file.sections = await Promise.all(
     splitMd(await fixMdLinks(markdown)).map(async (section: { body: string, html: string | null }) => {
-      const parsed = await hubdown(section.body, { runBefore: [plaintextFix] })
+      const parsed = await hubdown(section.body, { runBefore: [plaintextFix, fiddleUrls] })
       const $ = cheerio.load(parsed.content || '')
       file.title =
         file.title ||

@@ -1,13 +1,22 @@
-const visit = require('unist-util-visit')
+import * as visit from 'unist-util-visit'
+import { Node } from 'unist';
 
 const regex = /(javascript.*|js.*) fiddle='([^']*)'(.*)/
 
 // TODO(deermichel): add test!
 
+interface IAdditionalNode extends Node {
+  lang: string
+
+  data: {
+    hProperties: Record<string, string>
+  }
+}
+
 // remark transformer for 'code' blocks to
 // embed fiddle urls as html attributes
-const fiddleUrls = () => tree => {
-  visit(tree, 'code', node => {
+export const fiddleUrls = () => (tree: Node) => {
+  visit(tree, 'code', (node: IAdditionalNode) => {
     if (!node.lang) return
 
     const matches = node.lang.match(regex)
@@ -30,5 +39,3 @@ const fiddleUrls = () => tree => {
   })
   return tree
 }
-
-module.exports = fiddleUrls
