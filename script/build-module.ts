@@ -98,7 +98,7 @@ async function parseFile(file: $TSFixMe) {
   }
 
   file.sections = await Promise.all(
-    splitMd(await fixMdLinks(markdown)).map(async (section: $TSFixMe) => {
+    splitMd(await fixMdLinks(markdown)).map(async (section: { body: string, html: string | null }) => {
       const parsed = await hubdown(section.body, { runBefore: [plaintextFix] })
       const $ = cheerio.load(parsed.content || '')
       file.title =
@@ -169,11 +169,11 @@ async function parseFile(file: $TSFixMe) {
   return cleanDeep(file)
 }
 
-function fixMdLinks(md: string): Promise<$TSFixMe> {
+function fixMdLinks(md: string): Promise<string> {
   return new Promise((resolve, reject) => {
     remark()
       .use(links)
-      .process(md, (err: Error, file: $TSFixMe) => {
+      .process(md, (err: Error, file: { contents: string }) => {
         if (err) {
           reject(err)
         } else {
@@ -183,7 +183,7 @@ function fixMdLinks(md: string): Promise<$TSFixMe> {
   })
 }
 
-function splitMd(md: string): $TSFixMe {
+function splitMd(md: string): Array<{ name: null, body: string[] }> {
   const slugger = new GithubSlugger()
   const sections: Array<{ name: null, body: Array<string> }> = []
   let section = { name: null, body: [] as Array<string> }
