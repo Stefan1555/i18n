@@ -61,7 +61,7 @@ async function parseDocs(): Promise<$TSFixMe> {
 }
 
 async function parseFile(file: $TSFixMe) {
-  file.fullPath = path.join(file.basePath, file.relativePath)
+  file.fullyPath = path.join(file.basePath, file.relativePath)
   file.locale = file.relativePath.split('/')[0]
   file.slug = path.basename(file.relativePath, '.md')
 
@@ -89,7 +89,7 @@ async function parseFile(file: $TSFixMe) {
   file.isApiStructureDoc = file.category === 'api/structures'
 
   // parse markdown to HTML
-  const markdown = fs.readFileSync(file.fullPath, 'utf8')
+  const markdown = fs.readFileSync(file.fullyPath, 'utf8')
 
   // ignore some docs & skip the rest of the parsing logic
   if (markdown.includes(IGNORE_PATTERN)) {
@@ -159,6 +159,7 @@ async function parseFile(file: $TSFixMe) {
   )
 
   // remove leftover file props from walk-sync
+  delete file.fullyPath
   delete file.mode
   delete file.size
   delete file.mtime
